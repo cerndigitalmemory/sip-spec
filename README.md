@@ -1,4 +1,6 @@
-# CERN SIP DRAFT 1
+# CERN SIP Specification
+
+## Draft
 
 This specification aims to implement the 4.2.2.2/Submission Information Package (SIP) reference definition from the OAIS Reference Model (Pink pre-magenta book / September 2019 - ISO 14721).
 
@@ -58,8 +60,6 @@ BagIt is an Internet Draft that specifies a file system structure for transferri
 A BagIt bag can be seen as a mechanism for serialization and transport consistency, while the internal SIP structure specification (the contents of data folder) is a way to consistently provide identity, annotations, provenance, attached files and metadata of the resource target of the preservation process.
 
 As such, the two formats complement each-other.
-
-
 
 This "bag" is made of the following elements:
 

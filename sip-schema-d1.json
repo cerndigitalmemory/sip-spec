@@ -63,10 +63,6 @@
 							"type": "string"
 						}
 					}
-				},
-				"default": {
-					"type": "boolean",
-					"description": "Describes if the file is the default ROM to play"
 				}
 			},
 			"required": ["filename"]
