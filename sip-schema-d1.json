@@ -1,70 +1,126 @@
 {
-	"$schema": "https://json-schema.org/draft/2020-12/schema",
-	"$id": "https://gitlab.cern.ch/digitalmemory/utils/-/raw/master/oais_utils/sip-schema-d1.json",
-	"title": "SIP high level metadata",
-	"description": "High level metadata defining a SIP accepted by CERN Digital Memory OAIS.",
-	"type": "object",
-	"properties": {
-		"source": {
-			"description": "A unique string identiyfing the upstream source (producer).",
-			"type": "string",
-			"enum": ["cds", "zenodo", "cod"]
-		},
-		"resource_id": {
-			"description": "A unique (in the context of the upstream source) string identifier for the resource",
-			"type": "string"
-		},
-		"sip_creation_timestamp": {
-			"description": "Date time timestamp of SIP creation ",
-			"type": "string",
-		},
-		"files": {
-			"type": "array",
-			"items": {
-				"$ref": "#/definitions/file"
-			}
-		},
-	},
-	"definitions": {
-		"remote": {
-			"type": {},
-			"url": {},
-		},
-		"file": {
-			"type": "object",
-			"properties": {
-				"remote": {
-					"$ref": "#/definitions/file",
-				},
-				"filename": {
-					"type": "string"
-				},
-				"localpath": {
-					"type": "string"
-				},
-				"metadata": {
-					"type": "boolean",
-					"description": "Describes if the file is to be considered metadata"
-				},
-				"metadata_ref": {
-					"type": "string",
-					"description": "File name of the file the metadata refers to",
-				},
-				"hash": {
-					"type": "object",
-					"properties": {
-						"md5": {
-							"type": "string"
-						},
-						"sha1": {
-							"type": "string"
-						},
-						"sha256": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"required": ["filename"]
-		},
-	}
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://gitlab.cern.ch/digitalmemory/utils/-/raw/master/oais_utils/sip-schema-d1.json",
+    "title": "SIP high level metadata",
+    "description": "High level metadata defining a SIP accepted by CERN Digital Memory OAIS.",
+    "type": "object",
+    "properties":
+    {
+    	"created_by": {
+      		"type": "string"
+   		},
+        "source":
+        {
+            "description": "A unique string identifying the upstream source digital repository (producer). `local` means the package was created from a local file system.",
+            "type": "string",
+            "enum": ["cds", "zenodo", "cod", "ilcdoc", "ilcagenda", "local", "indico"]
+        },
+        "resource_id":
+        {
+            "description": "A unique (in the context of the upstream source) string identifier for the resource",
+            "type": "string"
+        },
+        "sip_creation_timestamp":
+        {
+            "description": "Date time timestamp of SIP creation ",
+            "type": "string",
+        },
+        "files":
+        {
+            "type": "array",
+            "items":
+            {
+                "$ref": "#/definitions/file"
+            }
+        },
+        "audit":
+        {
+            "type": "array",
+            "items":
+            {
+                "$ref": "#/definitions/step"
+            }
+        }
+    },
+    "definitions":
+    {
+        "step":
+        {
+            "type": "object",
+            "description": "A step in the SIP lifetime"
+            "properties":
+            {
+                "tool":
+                {
+                    "type": "object"
+                    "description": "Details on the tool that run this action"
+                }
+                "action":
+                {
+                    "type": "string"
+                },
+                "timestamp":
+                {
+                    "type": "integer"
+                },
+                "message":
+                {
+                    "type": "string"
+                }
+            }
+        },
+        "file":
+        {
+            "type": "object",
+            "properties":
+            {
+                "remote":
+                {
+                    "$ref": "#/definitions/file",
+                },
+                "filename":
+                {
+                    "type": "string"
+                },
+                "localpath":
+                {
+                    "type": "string"
+                },
+                "metadata":
+                {
+                    "type": "boolean",
+                    "description": "Describes if the file is to be considered metadata"
+                },
+                "metadata_ref":
+                {
+                    "type": "string",
+                    "description": "File name of the file the metadata refers to",
+                },
+                "checksum":
+                {
+                    "type": ["array", "string"],
+                    "description": "Available checksums for the file",
+                },
+                "hash":
+                {
+                    "type": "object",
+                    "properties":
+                    {
+                        "md5":
+                        {
+                            "type": "string"
+                        },
+                        "sha1":
+                        {
+                            "type": "string"
+                        },
+                        "sha256":
+                        {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "required": ["filename"]
+        },
+    }
