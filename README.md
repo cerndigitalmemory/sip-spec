@@ -1,22 +1,16 @@
 # CERN SIP Specification
 
-## Draft
+## Introduction
 
 This specification aims to implement the 4.2.2.2/Submission Information Package (SIP) reference definition from the OAIS Reference Model (Pink pre-magenta book / September 2019 - ISO 14721).
 
-- [GLOSSARY](#GLOSSARY)
-- [SCOPE](#SCOPE)
-- [CERN SIP Specification](#CERN-SIP-Specification)
-- [EXAMPLES](#EXAMPLES)
-
-### GLOSSARY
+## Glossary
 
 - Consumer - The role played by those persons, or client systems, who interact with OAIS services to find preserved information of interest and to access that information in whatever level of detail is allowed. 
 - Producer - The role played by those persons or client systems that provide the information to be preserved.
 - OAIS - The system.
 
-
-### SCOPE
+## Scope
 
 **Submission Information Packages (SIPs)** are the packages sent by Producers to the CERN OAIS. It is the purpose of this document to provide a formal specification of how these packages must be produced.
 
@@ -46,9 +40,7 @@ To help understand in which ways the following specification provides this infor
 
 A SIP usually contains *some* of the PDI, while more can be added in the AIP (e.g. metadata about the digitation or preservation process, to be added as "Provenance Information" in the AIP).
 
-
-
-### CERN SIP Specification
+## Specification
 
 If not otherwise specified (e.g. marked with "optional"), each element described here is mandatory. The SIP won't be validated and accepted in the OAIS if those requirements aren't satified.
 
@@ -59,28 +51,28 @@ BagIt is an Internet Draft that specifies a file system structure for transferri
 
 A BagIt bag can be seen as a mechanism for serialization and transport consistency, while the internal SIP structure specification (the contents of data folder) is a way to consistently provide identity, annotations, provenance, attached files and metadata of the resource target of the preservation process.
 
-As such, the two formats complement each-other.
+As such, the two formats complement each-other. For elements marked with \* , refer to the BagIt format for the specification details.
 
-This "bag" is made of the following elements:
+This "bag" is (at least) made of the following elements:
 
 - A `data/` folder, containing 2 sub-folders:
     - `content`, containing the original archival target, in the original directory structure. [**1a**] E.g.:
     - `meta`, containing:
         -  `sip.json` [**2c, 2d, 2a, 1b**]
         -  the (upstream) metadata about the Data Object. This can consist of more than one file. Everything else in this folder a part from `sip.json` will be considered as part this category.
-- `bagit.txt`, including the bagit version and the character encoding [**1b**]
+- `bagit.txt`, including the bagit version and the character encoding [**1b**] \*
     ```
     BagIt-Version: 0.97
     Tag-File-Character-Encoding: UTF-8
     ```
-- `bag-info.txt` [**2c**]
+- `bag-info.txt` [**2c**] \*
     Some *basic* and additional metadata about the generation of the SIP package. These values (and more) are also specified in the "sip-process" field of the sip.json file. The only required value here is the "Payload Oxum".
     ```
     Bag-Software-Agent: toolname 0.1
     Bagging-Date: 2021-08-20
     Payload-Oxum: 5821296.63
     ```
-- At least one manifest file that itemizes the filenames present in the “data” directory, as well as their checksums. [**2d**]
+- At least one manifest file that itemizes the filenames present in the “data” directory, as well as their checksums. [**2d**] \*
     ```
     data/content/42.mp4 HASH
     data/content/sachiel.png HASH
@@ -88,39 +80,88 @@ This "bag" is made of the following elements:
 
 E.g.:
 ```
-.
+sip::cds::2728246::1635233733/
 ├── bag-info.txt
 ├── bagit.txt
 ├── data
 │   ├── content
-│   │   ├── 42.mp4
-│   │   └── sachiel.png
+│   │   ├── CERN-THESIS-2020-092.pdf
+│   │   └── metadata-cds-2728246.xml
 │   └── meta
-│       ├── metadata.xml
+│       ├── bagitcreate.log
 │       └── sip.json
 └── manifest-md5.txt
 ```
 
 ### sip.json
 
-The `sip.json` file must provide some high level metadata about the resource target of the archival process.
+The `sip.json` file must provide the following informations:
 
-- `sourceid`. Unique identifier for the upstream sorce digital repository. This value must be negotiated beforehand.
-- `recid`. Unique identifier for the resource (for the specified sourceid)
-- `metadataFile_upstream`. Upstream URLs (e.g. API endpoints) where the metadata files were obtained.
-- `contentfiles`. Details about files and exposes the relationship between the metadata files and the payload files.
-- `timestamp` 
-- `sip-process` information about the SIP generation process
+- some high level metadata about the resource target of the archival process
+- the tool and the parameters provided to the tool used to generate the package
+- for every file in payload, the upstream origin URL, checksums, filenames and location in the bag
 
-A formal JSON schema specification for this file is provided [here]().
+```json
+{
+    "$schema": "https://gitlab.cern.ch/digitalmemory/sip-spec/-/blob/master/sip-schema-d1.json",
+    "created_by": "bagit-create 0.0.8",
+    "audit": [
+        {
+            "tool": {
+                "name": "CERN BagIt Create",
+                "version": "0.0.8",
+                "website": "https://gitlab.cern.ch/digitalmemory/bagit-create",
+                "params": {
+                    "recid": "2728246",
+                    "source": "cds",
+                    "loglevel": 0,
+                    "target": null,
+                    "targetpath": null,
+                    "author": null,
+                    "targetbasepath": null,
+                    "dry_run": false,
+                    "alternate_uri": false,
+                    "bibdoc": false,
+                    "bd_ssh_host": null,
+                    "timestamp": 1635233733
+                }
+            },
+            "action": "sip_create",
+            "timestamp": 1635233733,
+            "message": ""
+        }
+    ],
+    "source": "cds",
+    "recid": "2728246",
+    "metadataFile_upstream": "https://cds.cern.ch/record/2728246?of=xm",
+    "contentFiles": [
+        {
+            "origin": {
+                "url": "http://cds.cern.ch/record/2728246/files/CERN-THESIS-2020-092.pdf",
+                "filename": "CERN-THESIS-2020-092.pdf",
+                "path": ""
+            },
+            "size": 1947642,
+            "bagpath": "data/content/CERN-THESIS-2020-092.pdf",
+            "metadata": false,
+            "downloaded": true,
+            "checksum": [
+                "md5:7a3dc3f9dd04f26d4ee0a3b139114077"
+            ]
+        },
+        ...
+    ]
+}
+```
+A formal JSON schema specification for this file is provided [here](https://gitlab.cern.ch/digitalmemory/sip-spec/-/blob/master/sip-schema-d1.json).
 
-### VERSIONING
+### Versioning (proposal)
 
 Versioning is enabled by submitting subsequents SIP(s) with the same `recid` and `sourceid` but a different `timestamp`.
 
 E.g. 
 
-### SERIALISATION
+### Serialisation
 
 The SIP can be optionally serialized as a ZIP or TAR file. Several rules govern such serialization (as specified by the [BagIt specification Draft 14 section 4](https://datatracker.ietf.org/doc/html/draft-kunze-bagit-14#section-4) "Serialisation"):
    1.  The top-level directory of a serialization MUST contain only one
@@ -146,27 +187,10 @@ The SIP can be optionally serialized as a ZIP or TAR file. Several rules govern 
        files may appear inside the payload beneath the "data/"
        directory, where they would be treated as any other payload file.
        
-### TRUSTING
+### Trusting (proposal)
 
 The Producer must negotiate a way to verify its identity. After having provided a public key the SIP (or part of it, e.g. `meta`) will be required to be signed to authenticate the Producer.
 
-### OAIS Utils
+### Examples
 
-The "OAIS Utils" python package provides some CLI tools to verify if a folder is a valid CERN SIP:
-
-```
-$ verify-sip my-generated-sip
-
-This is not a valid CERN SIP according to specification DRAFT1: 
-- sip.json is missing the timestamp key
-```
-
-### bagit-create
-
-The bagit create python package provides a CLI tool to automatically generate CERN SIP for resources from Zenodo, the CERN Document Server, the CERN Open Data portal and similar digital repositories based on Invenio 1.x and 3.x.
-
-```
-$ bic --recid 2751237 --source cds 
-```
-
-### EXAMPLES
+- [sip::ilcdoc::8335::1634646355](https://oais.web.cern.ch/bags/sip/informationSystems/ilcdoc/sip::ilcdoc::8335::1634646355/)
