@@ -63,10 +63,11 @@
                 "tool":
                 {
                     "type": "object",
-                    "description": "Details on the tool that run this action"
+                    "description": "Details on the tool responsible for this action"
                 },
                 "action":
                 {
+                    "description": "Descriptive name for the action",
                     "type": "string"
                 },
                 "timestamp":
@@ -81,6 +82,7 @@
         },
         "file":
         {
+            "description": "Object describing a single File with informations from its origin, checksums and bag location",
             "type": "object",
             "properties":
             {
@@ -123,15 +125,17 @@
                 },
                 "bagpath":
                 {
+                    "description": "Path where the file can be found inside the SIP",
                     "type": "string"
                 },
                 "metadata":
                 {
-                    "description": "Describes if the file is to be considered metadata"
+                    "description": "Describes if the file is to be considered metadata",
                     "type": "boolean"
                 },
                 "downloaded":
                 {
+                    "description": "Describes if the file is included in the bag or not",
                     "type": "boolean"
                 },
                 "checksum":
