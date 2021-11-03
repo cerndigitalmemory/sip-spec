@@ -6,14 +6,24 @@
     "type": "object",
     "properties":
     {
-    	"created_by": {
-      		"type": "string"
-   		},
+        "created_by":
+        {
+            "type": "string"
+        },
         "source":
         {
             "description": "A unique string identifying the upstream source digital repository (producer). `local` means the package was created from a local file system.",
             "type": "string",
-            "enum": ["cds", "zenodo", "cod", "ilcdoc", "ilcagenda", "local", "indico"]
+            "enum":
+            [
+                "cds",
+                "zenodo",
+                "cod",
+                "ilcdoc",
+                "ilcagenda",
+                "local",
+                "indico"
+            ]
         },
         "resource_id":
         {
@@ -22,8 +32,8 @@
         },
         "sip_creation_timestamp":
         {
-            "description": "Date time timestamp of SIP creation ",
-            "type": "string",
+            "description": "Date time timestamp of SIP creation",
+            "type": "integer"
         },
         "files":
         {
@@ -47,14 +57,14 @@
         "step":
         {
             "type": "object",
-            "description": "A step in the SIP lifetime"
+            "description": "A step in the SIP lifetime",
             "properties":
             {
                 "tool":
                 {
-                    "type": "object"
+                    "type": "object",
                     "description": "Details on the tool that run this action"
-                }
+                },
                 "action":
                 {
                     "type": "string"
@@ -74,53 +84,70 @@
             "type": "object",
             "properties":
             {
-                "remote":
+                "origin":
                 {
-                    "$ref": "#/definitions/file",
+                    "type": "object",
+                    "properties":
+                    {
+                        "url":
+                        {
+                            "oneOf":
+                            [
+                                {
+                                    "type": "array"
+                                },
+                                {
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "filename":
+                        {
+                            "type": "string"
+                        },
+                        "path":
+                        {
+                            "type": "string"
+                        }
+                    },
+                    "required":
+                    [
+                        "url",
+                        "filename",
+                        "path"
+                    ]
                 },
-                "filename":
+                "size":
                 {
-                    "type": "string"
+                    "type": "integer"
                 },
-                "localpath":
+                "bagpath":
                 {
                     "type": "string"
                 },
                 "metadata":
                 {
-                    "type": "boolean",
                     "description": "Describes if the file is to be considered metadata"
+                    "type": "boolean"
                 },
-                "metadata_ref":
+                "downloaded":
                 {
-                    "type": "string",
-                    "description": "File name of the file the metadata refers to",
+                    "type": "boolean"
                 },
                 "checksum":
                 {
-                    "type": ["array", "string"],
                     "description": "Available checksums for the file",
-                },
-                "hash":
-                {
-                    "type": "object",
-                    "properties":
-                    {
-                        "md5":
+                    "oneOf":
+                    [
                         {
-                            "type": "string"
+                            "type": "array"
                         },
-                        "sha1":
-                        {
-                            "type": "string"
-                        },
-                        "sha256":
                         {
                             "type": "string"
                         }
-                    }
+                    ]
                 }
-            },
-            "required": ["filename"]
-        },
+            }
+        }
     }
+}
