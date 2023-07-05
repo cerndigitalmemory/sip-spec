@@ -13,17 +13,7 @@
         "source":
         {
             "description": "A unique string identifying the upstream source digital repository (producer). `local` means the package was created from a local file system.",
-            "type": "string",
-            "enum":
-            [
-                "cds",
-                "zenodo",
-                "cod",
-                "ilcdoc",
-                "ilcagenda",
-                "local",
-                "indico"
-            ]
+            "type": "string"
         },
         "resource_id":
         {
@@ -40,7 +30,7 @@
             "type": "array",
             "items":
             {
-                "$ref": "#/definitions/file"
+                "$ref": "#/$defs/file"
             }
         },
         "audit":
@@ -48,12 +38,36 @@
             "type": "array",
             "items":
             {
-                "$ref": "#/definitions/step"
+                "$ref": "#/$defs/step"
             }
+        },
+        "usr-meta":
+        {
+            "$ref": "#/$defs/usr-meta"
         }
     },
-    "definitions":
+    "$defs":
     {
+        "usr-meta":
+        {
+            "type": "object",
+            "description": "This field can be used by the user to provide additional information about the SIP or the payload: an embargo timestamp, a comment and a free text describing the collection of the harvested record",
+            "properties":
+            {
+                "collection":
+                {
+                    "type": "string"
+                },
+                "embargo_timestamp":
+                {
+                    "type": "integer"
+                },
+                "comment":
+                {
+                    "type": "string"
+                }
+            }
+        },
         "step":
         {
             "type": "object",
